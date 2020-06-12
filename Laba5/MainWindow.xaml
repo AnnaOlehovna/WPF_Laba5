@@ -5,8 +5,82 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Laba5"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="1000">
+
+    <Window.Resources>
+        <Style TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="3"/>
+        </Style>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="Open" Executed="CommandBinding_Executed_Open"/>
+        <CommandBinding Command="Save" Executed="CommandBinding_Executed_Save"/>
+    </Window.CommandBindings>
+
     <Grid>
-        
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="85"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="Meню">
+                <MenuItem Command="Open" />
+                <MenuItem Command="Save"/>
+            </MenuItem>
+        </Menu>
+
+        <Grid x:Name="Grid" Grid.Row="2">
+            <Image Grid.Row="2" Name="canvas" Source="Image\Canvas.gif" Stretch="Fill" Opacity="1.0" 
+                   MouseDown="canvas_MouseDown"  MouseMove="canvas_MouseMove">
+            </Image>
+        </Grid>
+
+        <StackPanel  Grid.Row="1" Orientation="Horizontal" Background="Beige">
+            <Border>
+                <StackPanel>
+                    <Label Content="Толщина линии"/>
+                    <Slider x:Name="slWight" TickPlacement="BottomRight"  Margin="3" IsSnapToTickEnabled="True"  TickFrequency="1"  Height="20" Width="80"/>
+                    <Label HorizontalAlignment="Center" Content="{Binding ElementName=slWight, Path=Value}"/>
+                </StackPanel>
+            </Border>
+
+            <Border>
+                <StackPanel Orientation="Vertical">
+                    <Button Height="60" Width="85" Click="BtnStrokeColor_Click">
+                        <Label Opacity="0.7" FontWeight="Bold" Margin="0,0,0,30">Цвет линии</Label>
+                    </Button>
+                    <Button Height="25" x:Name="BtnStrokeColor"/>
+                </StackPanel>
+            </Border>
+
+            <Border>
+                <StackPanel Orientation="Vertical">
+                    <Button Height="60" Width="85" Click="BtnBackgroundColor_Click">
+                        <Label Opacity="0.7" FontWeight="Bold"  Margin="0,0,0,30">Цвет фона</Label>
+                    </Button>
+
+                    <Button Height="25" x:Name="BtnBackgroundColor"/>
+                </StackPanel>
+            </Border>
+
+            <Border>
+                <Button Width="85" Command="Save" Content="Save"/>
+            </Border>
+
+            <Border>
+                <Button Width="85" Command="Open" Content="Open"/>
+            </Border>
+        </StackPanel>
+
+        <StatusBar  Grid.Row="3">
+            <StatusBarItem x:Name="Status"/>
+            <StatusBarItem Grid.Column="1" x:Name="statusBarFileName">Имя файла: New File</StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
