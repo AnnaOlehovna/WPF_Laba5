@@ -8,4 +8,4 @@ Laboratory Work #5
 
 Открытие файла
 <img src="pic2.PNG">
-<img src="pic2.PNG">
+<img src="pic3.PNG">
