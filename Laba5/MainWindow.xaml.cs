@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml.Serialization;
 
 namespace Laba5
 {
@@ -19,7 +20,6 @@ namespace Laba5
         ObservableCollection<Star> starList = new ObservableCollection<Star>();
         OpenFileDialog OpenFileDialog;
         SaveFileDialog SaveFileDialog;
-        Star _startInFile;
 
         public MainWindow()
         {
@@ -32,7 +32,7 @@ namespace Laba5
             Point pointClicked = e.GetPosition(canvas);
 
             Star currentStart = new Star(pointClicked.X, pointClicked.Y, BtnBackgroundColor.Background, BtnStrokeColor.Background, slWight.Value);
-            Grid.Children.Add(currentStart.path);
+            Grid.Children.Add(currentStart.getPath());
             starList.Add(currentStart);
 
         }
@@ -71,7 +71,7 @@ namespace Laba5
 
             OpenFileDialog = new OpenFileDialog();
             OpenFileDialog.InitialDirectory = "D:\\ПОИС\\СВПП";
-            OpenFileDialog.Filter = "Текстовый файл (*.txt)|*.txt|Все файлы (*.*)|*.*";
+            OpenFileDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
             OpenFileDialog.CheckFileExists = true;
             OpenFileDialog.Multiselect = true;
             OpenFileDialog.ShowDialog();
@@ -81,78 +81,48 @@ namespace Laba5
                 var FileText = File.ReadAllLines(OpenFileDialog.FileName);
                 statusBarFileName.Content = string.Format("Имя файла: {0}", OpenFileDialog.FileName);
                 Grid.Children.Clear();
-                Grid.Children.Add(canvas);
-                var s = 0;
-                _startInFile = new Star();
-                for (int i = 0; i < FileText.GetLength(0); i++)
+                Grid.Children.Add(canvas);           
+                List<Star> newList = new List<Star>();
+                XmlSerializer xs = new XmlSerializer(typeof(List<Star>));
+                using (FileStream fs = new FileStream(OpenFileDialog.FileName, FileMode.Open))
                 {
-                    s++;
-
-                    switch (s)
+                    newList = (List<Star>)xs.Deserialize(fs);
+                    foreach(Star _star in newList)
                     {
-                        case 1: _startInFile.X = double.Parse(FileText[i]); break;
-                        case 2: _startInFile.Y = double.Parse(FileText[i]); break;
-                        case 3: _startInFile.BackgroundColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString(FileText[i])); break;
-                        case 4: _startInFile.StrokeColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString(FileText[i])); break;
-                        case 5:
-                            _startInFile.Thickness = double.Parse(FileText[i]);
-                            _startInFile.PaintFigure();
-                            Grid.Children.Add(_startInFile.path); //Выводим на Canvas
-                            starList.Add(_startInFile);// Добавляем в список
-                            s = 0;
-                            _startInFile = new Star();
-                            break;
+                        _star.PaintFigure();
+                        Grid.Children.Add(_star.getPath());
+                        starList.Add(_star);
                     }
                 }
+             
             }
         }
 
-
-        /// <summary>
-        /// Команда сохраняет данные о фигурах в файл указанный в Dialog окне
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CommandBinding_Executed_Save(object sender, ExecutedRoutedEventArgs e)
+        private void CommandBinding_CanExecute_Save(object sender, CanExecuteRoutedEventArgs e)
         {
+            e.CanExecute = starList.Count > 0;
+        }
 
+        private void CommandBinding_Executed_Save(object sender, ExecutedRoutedEventArgs e)
+        {      
             SaveFileDialog = new SaveFileDialog();
             SaveFileDialog.InitialDirectory = "D:\\ПОИС\\СВПП";
-            SaveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            SaveFileDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
             SaveFileDialog.OverwritePrompt = false;
             SaveFileDialog.Title = "Сохранить это творение...";
             SaveFileDialog.ShowDialog();
 
             if (string.IsNullOrEmpty(SaveFileDialog.FileName) == false)
             {
-                File.WriteAllLines(SaveFileDialog.FileName, GetFileText());
+                XmlSerializer xs = new XmlSerializer(typeof(List<Star>));
+                using (FileStream fs = new FileStream(SaveFileDialog.FileName, FileMode.OpenOrCreate))
+                {
+                    xs.Serialize(fs, new List<Star>(starList));
+                }               
                 statusBarFileName.Content = string.Format("Имя файла: {0}", SaveFileDialog.FileName);
             }
 
         }
-
-
-        /// <summary>
-        /// Метод возвращает Список с исходными данными всех фигур построчно (X,Y,BuFon,BuLine,Thickness)
-        /// </summary>
-        /// <returns></returns>
-        private List<string> GetFileText()
-        {
-            var FileText = new List<string>();
-            foreach (Star a in starList)
-            {
-                FileText.Add(a.X.ToString());
-                FileText.Add(a.Y.ToString());
-                FileText.Add(a.BackgroundColor.ToString());
-                FileText.Add(a.StrokeColor.ToString());
-                FileText.Add(a.Thickness.ToString());
-            }
-
-            return FileText;
-        }
-
-
-
 
     }
 }

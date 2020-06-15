@@ -8,19 +8,54 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace Laba5
 {
-    class Star : Panel
+    [Serializable]
+    public class Star 
     {
 
-        public Path path;
+        private Path path;
+        [NonSerialized]
+        private readonly BrushConverter _colorConverter = new BrushConverter();
 
+        [XmlAttribute]
         public double X;
+        [XmlAttribute]
         public double Y;
-        public Brush BackgroundColor;
-        public Brush StrokeColor;
+   
+        [XmlAttribute]
         public double Thickness;
+
+        [XmlIgnore]
+        public Brush BackgroundColor;
+        [XmlIgnore]
+        public Brush StrokeColor;
+
+        [XmlAttribute]
+        public string ColorBackgroundString
+        {
+            get {
+                return BackgroundColor.ToString();
+            }
+            set
+            {              
+                BackgroundColor = (Brush)_colorConverter.ConvertFrom(value);               
+            }
+        }
+
+        [XmlAttribute]
+        public string ColorStrokeString
+        {
+            get {
+                return StrokeColor.ToString();
+            }
+            set
+            {
+                StrokeColor = (Brush)_colorConverter.ConvertFrom(value);
+            }
+        }
 
         public Star() : this(0, 0, null, null, 0) { }
 
@@ -80,6 +115,11 @@ namespace Laba5
         {
             this.path.StrokeThickness = i;
 
+        }
+
+        public Path getPath()
+        {
+            return path;
         }
     }
 }

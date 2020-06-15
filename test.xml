@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ArrayOfStar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Star X="188" Y="141.4" Thickness="2" ColorBackgroundString="#FFDDDDDD" ColorStrokeString="#FFDDDDDD" />
+  <Star X="380" Y="203" Thickness="2" ColorBackgroundString="#FFDDDDDD" ColorStrokeString="#FFDDDDDD" />
+  <Star X="311.20000000000005" Y="54.200000000000017" Thickness="2" ColorBackgroundString="#FFDDDDDD" ColorStrokeString="#FF004080" />
+  <Star X="564.80000000000007" Y="137.4" Thickness="2" ColorBackgroundString="#FFDDDDDD" ColorStrokeString="#FF004080" />
+</ArrayOfStar>

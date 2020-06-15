@@ -15,7 +15,7 @@
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="Open" Executed="CommandBinding_Executed_Open"/>
-        <CommandBinding Command="Save" Executed="CommandBinding_Executed_Save"/>
+        <CommandBinding Command="Save" Executed="CommandBinding_Executed_Save" CanExecute="CommandBinding_CanExecute_Save"/>
     </Window.CommandBindings>
 
     <Grid>
